@@ -18,29 +18,10 @@ cf_credentials="/mnt/gfs/$AH_SITE_NAME/nobackup/.cloudflare/credentials.json"
 if [ -f "$cf_credentials" ]; then
 
   # @TODO: Refactor away python when we don't have to support cloud classic.
-  zone=$(python3 -c '
-  import json
-  import sys
-  with open("'"$cf_credentials"'", "r") as f:
-    data = json.load(f)
-  sys.stdout.write(data.get("zoneid"))
-  '
-  )
-  email=$(python3 -c '
-  import json
-  import sys
-  with open("'"$cf_credentials"'", "r") as f:
-    data = json.load(f)
-  sys.stdout.write(data.get("email"))'
-  )
-
-  apikey=$(python3 -c '
-  import json
-  import sys
-  with open("'"$cf_credentials"'", "r") as f:
-    data = json.load(f)
-  sys.stdout.write(data.get("apikey"))'
-  )
+  read zone email apikey < <(python3 -c '
+import json
+data = json.load(open("'"$cf_credentials"'"))
+print(data.get("zoneid", ""), data.get("email", ""), data.get("apikey", ""))')
 
   # Flush CDN cache.
   raw_result=$(curl -sX POST "https://api.cloudflare.com/client/v4/zones/$zone/purge_cache" \
