@@ -1,0 +1,7 @@
+{
+    "name": "psu-online-education/acquia-devops-hooks",
+    "description": "A set of dev-ops hooks that can be shared between acquia hosted applications.",
+    "type": "acquia-devops-hooks",
+    "minimum-stability": "stable",
+    "require": {}
+}
