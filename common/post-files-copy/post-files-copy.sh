@@ -31,11 +31,9 @@ print(data.get("zoneid", ""), data.get("email", ""), data.get("apikey", ""))')
     -d "{\"hosts\": [\"$domain\"]}")
 
   result=$(python3 -c '
-  import json
-  import sys
-  data = json.loads('\'"$raw_result"\'')
-  sys.stdout.write(str(data.get("success")).lower())
-  ')
+import json
+data = json.loads('\'"$raw_result"\'')
+print(str(data.get("success")).lower())')
 
   [[ "$result" == "true" ]]
 fi
