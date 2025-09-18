@@ -10,6 +10,7 @@ drush updb --no-interaction
 drush cim --no-interaction
 drush cim --no-interaction
 
+# Disable maintenance mode.
 drush maint:set 0
 
 # Flush drupal cache.
