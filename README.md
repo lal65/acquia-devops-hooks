@@ -8,6 +8,35 @@ Acquia also offers a product called
 which can usually provide mostly-equivalent functionality, but it has several
 issues.
 
+## Requirements
+The domain(s) associated with the current Acquia environment are not easily
+accessible in the continuous deployment execution environment. These hooks
+require a special `$settings.php` element that fills the gap. The
+`current_fqdn` setting must be present.  For example:
+
+```php
+  // @TODO: Acquia should provide a better way of accessing this information.
+  $settings['current_fqdn'] = match($_ENV['AH_SITE_ENVIRONMENT']) {
+    'dev' => 'dev.my-site.psu.edu',
+    'test' => 'test.my-site.psu.edu',
+    'prod' => 'my-site.psu.edu',
+  };
+```
+
+## Installation
+To install these cloud hooks into an application, use Composer to pull in the
+repository and add symlinks from `./hooks/common/*/*` to the desired workflows.
+
+For example, to enable the post-code-deploy workflow:
+
+```bash
+# Relative to the application project root
+mkdir -p hooks/common/post-code-deploy
+ln -s \
+  ../../../vendor/lal65/acquia-devops-hooks/common/post-code-deploy/post-code-deploy.sh \
+   hooks/common/post-code-deploy/000-post-code-deploy.sh
+```
+
 ## Cloud Actions Limitations
 Due to Acquia not recommending use of the Cloudflare module, the "Clear
 external caches" Cloud Action cannot be used. Since Cloud Hooks cannot execute
@@ -62,21 +91,6 @@ On post-code-deploy, the following operations are automatically performed:
 - Flush drupal caches
 - Flush the Varnish cache
 - If applicable, flush the CDN cache <sup>[2]</sup>
-
-## Requirements
-The domain(s) associated with the current Acquia environment are not easily
-accessible in the continuous deployment execution environment. These hooks
-require a special `$settings.php` element that fills the gap. The
-`current_fqdn` setting must be present.  For example:
-
-```php
-  // @TODO: Acquia should provide a better way of accessing this information.
-  $settings['current_fqdn'] = match($_ENV['AH_SITE_ENVIRONMENT']) {
-    'dev' => 'dev.my-site.psu.edu',
-    'test' => 'test.my-site.psu.edu',
-    'prod' => 'my-site.psu.edu',
-  };
-```
 
 ### Optional CDN Purging
 The Cloudflare CDN can be configured to be auto-purged by placing a
