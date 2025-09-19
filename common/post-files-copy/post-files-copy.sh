@@ -30,6 +30,8 @@ print(data.get("zoneid", ""), data.get("email", ""), data.get("apikey", ""))')
     -H "Content-Type: application/json" \
     -d "{\"hosts\": [\"$domain\"]}")
 
+  echo raw_result
+
   result=$(python3 -c '
 import json
 data = json.loads('\'"$raw_result"\'')
