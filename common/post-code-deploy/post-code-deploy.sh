@@ -11,7 +11,7 @@ drush cim --no-interaction
 drush cim --no-interaction
 
 # Disable maintenance mode.
-drush maint:set 0
+drush maint:set 0 && echo "Disabled maintenance mode"
 
 # Flush drupal cache.
 drush cr
